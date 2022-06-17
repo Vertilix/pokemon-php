@@ -1,4 +1,19 @@
 <?php
+session_start();
+error_reporting(-1);
+ini_set( 'display_errors', 1 ); // Op arch linux liet hij geen errors zien maar met deze command wel, Misschien is er een andere oplossing maar voor nu niet nodig
+
+$selectedPokemon = new Pokemon;
+$randomPokemon = new Pokemon;
+
+if(isset($_SESSION['hp'])) {
+    $selectedPokemon->hp = $_SESSION['hp'];
+    $randomPokemon->hp = $_SESSION['ehp'];
+}else {
+    $randomPokemon->setHp(100);
+    $selectedPokemon->setHp(100);
+}
+
 if(isset($_GET["pokemon"])) {
     $pokemon = $_GET["pokemon"];
 }
@@ -8,38 +23,32 @@ $shown = "none";
 class Pokemon {
     public $name;
     public $type;
-    public $hp = 100;
+    public $hp;
 
     function setName($name){
         $this->name = $name;
     }
 
+    function setHp($hp) {
+        $this->hp = $hp;
+    }
+
     function setType($type){
         $this->type = $type;
-    }
-
-    function getName(){
-        return $this->name;
-    }
-
-    function getType(){
-        return $this->type;
     }
 }
 
 $names = array("Charmander", "Bulbasaur", "Squirtle");
 $types = array("Fire", "Grass", "Water");
 
-$selectedPokemon = new Pokemon;
-$randomPokemon = new Pokemon;
 function createPokemon($n, $t) {
     global $names;
     global $types;
     global $selectedPokemon;
     $selectedPokemon->setName($names[$n]);
     $selectedPokemon->setType($types[$t]);
-    echo 'Jij koos "' . $selectedPokemon->getName(). '"!<br>';
-    echo 'Met type "' . $selectedPokemon->getType(). '"!<br>';
+    echo 'Jij koos "' . $selectedPokemon->name. '"!<br>';
+    echo 'Met type "' . $selectedPokemon->type. '"!<br>';
 }
 
 function createBattle() {
@@ -47,19 +56,24 @@ function createBattle() {
     global $names;
     global $types;
     $randomPokemon->setName($names[array_rand($names)]);
-    if ($randomPokemon->getName() == "Charmander") {
+    if ($randomPokemon->name == "Charmander") {
         $randomPokemon->setType($types[0]);
-    }elseif ($randomPokemon->getName()  == "Bulbasaur") {
+    }elseif ($randomPokemon->name  == "Bulbasaur") {
         $randomPokemon->setType($types[1]);
     }else{
         $randomPokemon->setType($types[2]);
     }
-    echo $randomPokemon->getType();
-    echo $randomPokemon->getName();
+    echo $randomPokemon->type;
+    echo $randomPokemon->name;
+    echo $randomPokemon->hp;
 }
+
+$_SESSION["hp"] = $selectedPokemon->hp;
+$_SESSION["ehp"] = $selectedPokemon->hp;
 
 function damage(){
     $defaultDmg = 20;
+
 }
 
 if ($pokemon == "Charmander") {
