@@ -24,14 +24,19 @@ class Pokemon {
     }
 }
 
+$names = array("Charmander", "Bulbasaur", "Squirtle");
+$types = array("Fire", "Grass", "Squirtle");
+
+$selectedPokemon = new Pokemon;
+$randomPokemon = new Pokemon;
 function createPokemon($n, $t) {
-    $names = array("Charmander", "Bulbasaur", "Squirtle");
-    $types = array("Fire", "Grass", "Squirtle");
-    $selectedPokemon = new Pokemon;
+    global $names;
+    global $types;
+    global $selectedPokemon;
     $selectedPokemon->setName($names[$n]);
     $selectedPokemon->setType($types[$t]);
     echo 'Jij koos "' . $selectedPokemon->getName(). '"!<br>';
-    echo 'Met type"' . $selectedPokemon->getType(). '"!<br>';
+    echo 'Met type "' . $selectedPokemon->getType(). '"!<br>';
 }
 
 if ($pokemon == "Charmander") {
@@ -41,6 +46,17 @@ if ($pokemon == "Charmander") {
 }else{
     createPokemon(2, 2);
 }
+
+function createBattle() {
+    global $selectedPokemon;
+    global $randomPokemon;
+    global $names;
+    global $types;
+    $randomPokemonChooser = array_rand($names, 3);
+
+}
+
+
 ?>
 
 <!DOCTYPE html>
