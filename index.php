@@ -3,25 +3,32 @@ session_start();
 error_reporting(-1);
 ini_set( 'display_errors', 1 ); // Op arch linux liet hij geen errors zien maar met deze functies wel, Misschien is er een andere oplossing maar voor nu niet nodig
 
+if(isset($_GET['reset'])){ // Reset knop
+    session_destroy();
+    header('location:index.php');
+}
+
 $selectedPokemon = new Pokemon;
-$randomPokemon = new Pokemon;
+$enemyPokemon = new Pokemon;
 
 if(isset($_SESSION['hp'])) {
     $selectedPokemon->hp = $_SESSION['hp'];
-    $randomPokemon->hp = $_SESSION['eHp'];
-    $selectedPokemon->name = $_SESSION['jPokemon'];
-    $randomPokemon->name = $_SESSION['vPokemon'];
+    $enemyPokemon->hp = $_SESSION['eHp'];
 }else {
-    $randomPokemon->setHp(100);
+    $enemyPokemon->setHp(100);
     $selectedPokemon->setHp(100);
-    $selectedPokemon->name = "";
-    $randomPokemon->name = "";
 }
 
 if(isset($_GET["pokemon"])) {
     $pokemon = $_GET["pokemon"];
+    $ePokemon = $_GET["ePokemon"];
 }else {
     $pokemon = "";
+    $ePokemon = "";
+}
+
+if(isset($_GET['attack'])){
+    damage();
 }
 
 $shown = "none";
@@ -58,31 +65,33 @@ function createPokemon($n, $t) {
 }
 
 function createBattle() {
-    global $randomPokemon;
+    global $enemyPokemon;
     global $names;
     global $types;
-    $randomPokemon->setName($names[array_rand($names)]);
-    if ($randomPokemon->name == "Charmander") {
-        $randomPokemon->setType($types[0]);
-    }elseif ($randomPokemon->name  == "Bulbasaur") {
-        $randomPokemon->setType($types[1]);
+    global $ePokemon;
+    $enemyPokemon->name = $ePokemon;
+
+    if ($enemyPokemon->name == "Charmander") {
+        $enemyPokemon->setType($types[0]);
+        $enemyPokemon->setName($names[0]);
+    }elseif ($enemyPokemon->name  == "Bulbasaur") {
+        $enemyPokemon->setType($types[1]);
+        $enemyPokemon->setName($names[1]);
     }else{
-        $randomPokemon->setType($types[2]);
+        $enemyPokemon->setType($types[2]);
+        $enemyPokemon->setName($names[2]);
     }
-    echo $randomPokemon->type;
-    echo $randomPokemon->name;
-    echo $randomPokemon->hp;
+    echo $enemyPokemon->type;
+    echo $enemyPokemon->name;
+    echo $enemyPokemon->hp;
 }
 
 $_SESSION["hp"] = $selectedPokemon->hp;
-$_SESSION["eHp"] = $randomPokemon->hp;
-$_SESSION['jPokemon'] = $selectedPokemon->name;
-$_SESSION['vPokemon'] = $randomPokemon->name;
-
+$_SESSION["eHp"] = $enemyPokemon->hp;
 
 function damage(){
     $defaultDmg = 20;
-
+    if
 }
 
 if ($pokemon == "Charmander") {
@@ -98,7 +107,7 @@ if ($pokemon == "Charmander") {
     $shown = "block";
 }
 
-echo $randomPokemon->name;
+echo $enemyPokemon->name;
 echo $selectedPokemon->name;
 
 ?>
@@ -125,8 +134,19 @@ echo $selectedPokemon->name;
                 <option>Bulbasaur</option>
                 <option>Squirtle</option>
             </select>
+            <select name="ePokemon">
+                <option>Charmander</option>
+                <option>Bulbasaur</option>
+                <option>Squirtle</option>
+            </select>
             <button type="submit">Select</button>
         </div>
+
+        <button type="attack">Attack</button>
     </form>
+
+    <div class="buttons">
+    <a href="?reset">Reset</a>
+</div>
 </body>
 </html>
