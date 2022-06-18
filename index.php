@@ -1,21 +1,27 @@
 <?php
 session_start();
 error_reporting(-1);
-ini_set( 'display_errors', 1 ); // Op arch linux liet hij geen errors zien maar met deze command wel, Misschien is er een andere oplossing maar voor nu niet nodig
+ini_set( 'display_errors', 1 ); // Op arch linux liet hij geen errors zien maar met deze functies wel, Misschien is er een andere oplossing maar voor nu niet nodig
 
 $selectedPokemon = new Pokemon;
 $randomPokemon = new Pokemon;
 
 if(isset($_SESSION['hp'])) {
     $selectedPokemon->hp = $_SESSION['hp'];
-    $randomPokemon->hp = $_SESSION['ehp'];
+    $randomPokemon->hp = $_SESSION['eHp'];
+    $selectedPokemon->name = $_SESSION['jPokemon'];
+    $randomPokemon->name = $_SESSION['vPokemon'];
 }else {
     $randomPokemon->setHp(100);
     $selectedPokemon->setHp(100);
+    $selectedPokemon->name = "";
+    $randomPokemon->name = "";
 }
 
 if(isset($_GET["pokemon"])) {
     $pokemon = $_GET["pokemon"];
+}else {
+    $pokemon = "";
 }
 
 $shown = "none";
@@ -69,7 +75,10 @@ function createBattle() {
 }
 
 $_SESSION["hp"] = $selectedPokemon->hp;
-$_SESSION["ehp"] = $selectedPokemon->hp;
+$_SESSION["eHp"] = $randomPokemon->hp;
+$_SESSION['jPokemon'] = $selectedPokemon->name;
+$_SESSION['vPokemon'] = $randomPokemon->name;
+
 
 function damage(){
     $defaultDmg = 20;
@@ -88,6 +97,10 @@ if ($pokemon == "Charmander") {
 }else {
     $shown = "block";
 }
+
+echo $randomPokemon->name;
+echo $selectedPokemon->name;
+
 ?>
 
 <!DOCTYPE html>
