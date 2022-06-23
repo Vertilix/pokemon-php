@@ -66,6 +66,15 @@ function damage($a, $d) {
     }elseif ($a->type == "Water" && $d->type == "Grass"){
         $damage = $damage * 0.5;
         $damageMessage = $a->name. "used Water!". "It's not very effective!";
+    }elseif ($a->type == "Fire" && $d->type == "Fire") {
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Fire!". "It's not very effective!";
+    }elseif ($a->type == "Grass" && $d->type == "Grass"){
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Grass!". "It's not very effective!";
+    }elseif ($a->type == "Water" && $d->type == "Water"){
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Water!". "It's not very effective!";
     }else{
         $damage = 20;
         $damageMessage = $a->name ." did ". $damage . " damage to ". $d->name;
@@ -116,7 +125,6 @@ echo $ePokemon->type;
         </select>
         <input type="submit" value="Kies">
     </form>
-
     <form method="GET">
         <input type="submit" name="attack" value="Val aan">
     </form>
