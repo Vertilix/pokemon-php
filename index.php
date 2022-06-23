@@ -7,18 +7,15 @@ class Pokemon {
     public $type;
     public $hp;
 }
-$names = array("Charmander", "Bulbasaur", "Squirtle");
-$types = array("Fire", "Grass", "Water");
-
-$jPokemon = new Pokemon();
-
-$jPokemon->hp = 100;
 
 $ePokemon = new Pokemon();
-$ePokemon->name = $names[1];
-$ePokemon->type = $types[1];
-$ePokemon->hp = 100;
+$jPokemon = new Pokemon();
 
+$description = [
+    "Charmander"=>"Fire",
+    "Bulbasaur"=>"Grass",
+    "Squirtle"=>"Water"
+];
 
 if(isset($_SESSION['jPokemon'])) {
     $jPokemon = $_SESSION['jPokemon'];
@@ -29,29 +26,64 @@ if(isset($_SESSION['jPokemon'])) {
 }
 
 if(isset($_GET['attack'])){
-    damage($jPokemon, $ePokemon);
+    damage($jPokemon, $ePokemon);  
 }
 
 if(isset($_GET['reset'])){ // Reset knop
     session_destroy();
-    header('location:rewrite.php');
+    header('location:index.php');
 }
 
 if(isset($_GET['pokemon'])){
     $pokeName = $_GET['pokemon'];
     $jPokemon->name = $pokeName;
-}
+    $jPokemon->type = $description[$pokeName];
 
-function createPokemon($i,$n,$t){
-    $i = new Pokemon;
-    $i->name = $n;
-    $i->type = $t;
+    $ePokeName = $_GET['ePokemon'];
+    $ePokemon->name = $ePokeName;
+    $ePokemon->type = $description[$ePokeName];
 }
 
 function damage($a, $d) {
-    $defaultDamage = 20;
-    $d->hp -= $defaultDamage;
-    echo $a->name ." did ". $defaultDamage . " damage to ". $d->name;
+    $damage = 20;
+
+    // Zwaktes bv vuur is niet goed tegen water
+    if ($a->type == "Fire" && $d->type == "Grass") {
+        $damage = $damage * 2;
+        $damageMessage = $a->name. "used Fire!". "It's super effective!";
+    }elseif ($a->type == "Grass" && $d->type == "Water"){
+        $damage = $damage * 2;
+        $damageMessage = $a->name. "used Grass!". "It's super effective!";
+    }elseif ($a->type == "Water" && $d->type == "Fire"){
+        $damage = $damage * 2;
+        $damageMessage = $a->name. "used Water!". "It's super effective!";
+    }else{
+        $damage = 20;
+        $damageMessage = $a->name ." did ". $damage . " damage to ". $d->name;
+    }
+
+    // Zwaktes v2 als een pokemon die zwak is een pokemon die sterk tegen die type is aanvalt
+    if ($a->type == "Water" && $d->type == "Fire") {
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Fire!". "It's not very effective!";
+    }elseif ($a->type == "Grass" && $d->type == "Fire"){
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Grass!". "It's not very effective!";
+    }elseif ($a->type == "Water" && $d->type == "Grass"){
+        $damage = $damage * 0.5;
+        $damageMessage = $a->name. "used Water!". "It's not very effective!";
+    }else{
+        $damage = 20;
+        $damageMessage = $a->name ." did ". $damage . " damage to ". $d->name;
+    }
+
+    echo $damageMessage;
+    $d->hp -= $damage;
+}
+
+function death($d){
+    echo $d->name." is dood!";
+    $d->hp = 0;
 }
 
 if ($ePokemon->hp <= 0) {
@@ -60,16 +92,12 @@ if ($ePokemon->hp <= 0) {
     death($jPokemon);
 }
 
-function death($d){
-    echo $d->name." is dood!";
-    $d->hp = 0;
-}
-
 echo "<br>";
 echo $jPokemon->hp;
 echo $ePokemon->hp;
+echo $jPokemon->type;
+echo $ePokemon->type;
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,6 +111,11 @@ echo $ePokemon->hp;
 <body>
     <form method="GET" action="">
         <select name="pokemon">
+            <option>Charmander</option>
+            <option>Bulbasaur</option>
+            <option>Squirtle</option>
+        </select>
+        <select name="ePokemon">
             <option>Charmander</option>
             <option>Bulbasaur</option>
             <option>Squirtle</option>
