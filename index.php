@@ -26,7 +26,7 @@ if(isset($_SESSION['jPokemon'])) {
 }
 
 if(isset($_GET['attack'])){
-    damage($jPokemon, $ePokemon);  
+    damage($jPokemon, $ePokemon);
 }
 
 if(isset($_GET['reset'])){ // Reset knop
@@ -57,13 +57,7 @@ function damage($a, $d) {
     }elseif ($a->type == "Water" && $d->type == "Fire"){
         $damage = $damage * 2;
         $damageMessage = $a->name. "used Water!". "It's super effective!";
-    }else{
-        $damage = 20;
-        $damageMessage = $a->name ." did ". $damage . " damage to ". $d->name;
-    }
-
-    // Zwaktes v2 als een pokemon die zwak is een pokemon die sterk tegen die type is aanvalt
-    if ($a->type == "Water" && $d->type == "Fire") {
+    }elseif ($a->type == "Fire" && $d->type == "Water") {
         $damage = $damage * 0.5;
         $damageMessage = $a->name. "used Fire!". "It's not very effective!";
     }elseif ($a->type == "Grass" && $d->type == "Fire"){
