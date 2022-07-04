@@ -1,7 +1,5 @@
 <?php
 session_start();
-error_reporting(-1);
-ini_set( 'display_errors', 1 );
 class Pokemon {
     public $name;
     public $type;
@@ -27,6 +25,8 @@ if(isset($_SESSION['jPokemon'])) {
 
 if(isset($_GET['attack'])){
     damage($jPokemon, $ePokemon);
+
+    $visible = "none";
 }
 
 if(isset($_GET['reset'])){ // Reset knop
@@ -42,11 +42,12 @@ if(isset($_GET['pokemon'])){
     $ePokeName = $_GET['ePokemon'];
     $ePokemon->name = $ePokeName;
     $ePokemon->type = $description[$ePokeName];
+
+    $visible = "none";
 }
 
 function damage($a, $d) {
     $damage = 20;
-
     // Zwaktes bv vuur is niet goed tegen water
     if ($a->type == "Fire" && $d->type == "Grass") {
         $damage = $damage * 2;
@@ -79,7 +80,6 @@ function damage($a, $d) {
         $damage = 20;
         $damageMessage = $a->name ." did ". $damage . " damage to ". $d->name;
     }
-
     echo $damageMessage;
     $d->hp -= $damage;
 }
@@ -112,7 +112,7 @@ echo $ePokemon->type;
     <title>Pokemon</title>
 </head>
 <body>
-    <form method="GET" action="">
+    <form method="GET" action="" style="display:<?php echo $visible?>">
         <select name="pokemon">
             <option>Charmander</option>
             <option>Bulbasaur</option>
@@ -131,7 +131,6 @@ echo $ePokemon->type;
     <a href="?reset">Reset</a>
 </body>
 </html>
-
 <?php
     $_SESSION["jPokemon"] = $jPokemon;
     $_SESSION["ePokemon"] = $ePokemon;
